@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:email_validator/email_validator.dart';
 import './home.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -11,6 +12,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController email_controller = TextEditingController();
   TextEditingController password_controller = TextEditingController();
+  var password = "Pass123!";
+  var correctEmail = "example@tech387.com";
+
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -26,14 +30,25 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: 25,
               ),
-              TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                controller: email_controller,
-                decoration: const InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  labelText: "E-mail",
-                  border: OutlineInputBorder(),
+              Form(
+                key: _formKey,
+                child: TextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  controller: email_controller,
+                  // ignore: curly_braces_in_flow_control_structures
+                  validator: (value) {
+                    if (value == null) {
+                      return "Molimo unesite mail adresu";
+                    } else if (value != "example@tech387.com") {
+                      return "Unijeli ste pogrešnu adresu.";
+                    }
+                  },
+                  decoration: const InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    labelText: "E-mail",
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ),
               const SizedBox(
@@ -43,6 +58,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 keyboardType: TextInputType.visiblePassword,
                 obscureText: true,
                 controller: password_controller,
+                validator: (value) {
+                  if (value == null) {
+                    return "Molimo unesite mail password";
+                  } else if (value != "Pass123!") {
+                    return "Unijeli ste pogrešan password.";
+                  }
+                },
                 decoration: const InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -66,6 +88,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 child: MaterialButton(
                   onPressed: () {
+                    final form = _formKey.currentState!;
+                    if (form.validate()) {}
+
                     Navigator.of(context).pushReplacement(
                         MaterialPageRoute(builder: (context) => const Home()));
                   },
